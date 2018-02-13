@@ -66,7 +66,7 @@ function cogeDatos(){
 function mostrarDatos(datos){
     var zonadatos=document.getElementById("zonadatos");
     for (let item of datos){
-        zonadatos.innerHTML +=`<div>${item.clave} - ${item.titulo} - ${item.fecha}</div>`;
+        zonadatos.innerHTML +=`<div>${item.id} - ${item.titulo} - ${item.autor}</div>`;
     }
 }
 
