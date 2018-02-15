@@ -1,4 +1,5 @@
 var db;
+var datosAMostrar;
 function init(){
     console.log("Dom cargado");
     $.getJSON("http://www.mocky.io/v2/5a54ae822d00005f235b1cd2", function(data){
@@ -33,7 +34,7 @@ function init(){
 
 function cogeDatos(){
     //----------------------------------------------------------------------
-    var transaccion = db.transaction(["libros"], "readonly");                // Definimos el tipo de transacción, en este caso es "readwrite"
+    var transaccion = db.transaction(["libros"], "readonly");                // Definimos el tipo de transacción, en este caso es "readonly"
     var almacen = transaccion.objectStore("libros");                         // Seleccionamos el almacen al cual agregaremos objetos
     //----------------------------------------------------------------------
     var datos=[];    
@@ -49,6 +50,7 @@ function cogeDatos(){
         else {
             //alert("No more entries!");
             mostrarDatos(datos);
+            //console.log(datos);
         }
     };  
         
@@ -62,7 +64,66 @@ function mostrarDatos(datos){
             <th scope="row">${item.id}</th>
             <td>${item.titulo}</td>
             <td>${item.autor}</td>
+            <td><button onclick="editarDato('editar-${item.id}', '${item.id}')" id='editar-${item.id}'data-id='${item.id}' class='btn btn-warning'>Editar</button></td>
+            <td><button onclick="mostrarDatoParticular('mostrar-${item.id}')" id='mostrar-${item.id}'data-id='${item.id}' class='btn btn-primary'>Mostrar</button></td>
+            <td><button id='borrar-${item.id}'data-id='${item.id}' class='btn btn-danger'>Borrar</button></td>
         </tr>`;
     }
+    var numDatos=datos.length;
+    var numTotalPaginas=Math.round(numDatos/10);
+    console.log(numTotalPaginas);
+    datosAMostrar = datos;
 }
+
+
+
+function mostrarDatoParticular(id){
+    window.history.pushState(null, null, `${id}.html`);
+    let volver = document.getElementById("volver");
+    volver.classList.toggle("d-none");
+    console.log(datosAMostrar);
+    var botonMostrar = document.getElementById(id).parentElement;
+    let fila = botonMostrar.parentElement;
+    console.log(fila);
+    zonadatos.innerHTML="";
+    zonadatos.innerHTML=`${fila.innerHTML}`;
+
+}
+
+function veAtras(){
+    volver.classList.toggle("d-none")
+    contenido.classList.toggle("d-none");
+    window.history.back();
+    mostrarDatos(datosAMostrar);
+}
+
+function editarDato(id, dataId){
+    window.history.replaceState(null, null, `${id}.html`);
+    var contenido = document.getElementById("contenido");
+    volver.classList.toggle("d-none");
+    contenido.classList.toggle("d-none");
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("contenido").innerHTML = this.responseText;
+            $.getScript("js/editar.js")
+                .done(function(script, textStatus) {
+                    console.log(textStatus);
+                    funcionMolona();
+                })
+                .fail(function(jqxhr, settings, exception) {
+                    $("div.log").text("Triggered ajaxError handler.");
+                });
+
+        }
+    };
+    xhttp.open("GET", "editar.html", true);
+    xhttp.send();
+    
+
+}
+
+
+
 window.addEventListener("load", init);
