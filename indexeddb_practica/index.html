@@ -16,12 +16,17 @@
 </head>
 <body>
     <div class="container">
-        <h2>Lista de libros por leer</h2>
-        <strong><div>Algunos ya los he leído jeje...</div></strong>
-        <button onclick="veAtras()" id="volver" class="btn btn-success d-none">Volver</button>
-    </br>
-    </br>
-      <div id="contenido">
+        <header id="navegacion">
+          <button onclick="veAtras()" id="volver" class="btn btn-success d-none">Volver</button>
+          </br>
+          </br>
+        </header>
+        <div id="editar" class="d-none">
+
+        </div>
+        <div id="contenido">
+            <h2>Lista de libros por leer</h2>
+            <strong><div>Algunos ya los he leído jeje...</div></strong>
         <table id="tabla" class="table table-hover text-center">
                 <thead>
                   <tr>

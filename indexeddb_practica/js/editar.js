@@ -1,46 +1,63 @@
-function funcionMolona(){
-    // Let us open our database
-    var DBOpenRequest = window.indexedDB.open("toDoList", 4);
 
-    DBOpenRequest.onsuccess = function(event) {
-        note.innerHTML += '<li>Database initialised.</li>';
-
-        // store the result of opening the database in the db variable.
-        // This is used a lot below
-        db = DBOpenRequest.result;
-
-        // Run the getData() function to get the data from the database
-        getData();
-    };
-
-    function getData() {
-        // open a read/write db transaction, ready for retrieving the data
-        var transaction = db.transaction(["toDoList"], "readwrite");
-
+function selecionaElemento(dataId){
+    getData(dataId);
+    function getData(dataId) {
+        //----------------------------------------------------------------------
+        var transaccion = db.transaction(["libros"], "readwrite");                // Definimos el tipo de transacción, en este caso es "readonly"
+        var almacen = transaccion.objectStore("libros");                         // Seleccionamos el almacen al cual agregaremos objetos
+        //----------------------------------------------------------------------
+        
+        
+        //----------------------------------------------------------------------
         // report on the success of the transaction completing, when everything is done
-        transaction.oncomplete = function(event) {
-        note.innerHTML += '<li>Transaction completed.</li>';
+        transaccion.oncomplete = function(event) {
+        console.log("en oncomplete");
         };
 
-        transaction.onerror = function(event) {
-        note.innerHTML += '<li>Transaction not opened due to error: ' + transaction.error + '</li>';
+        transaccion.onerror = function(event) {
+        console.log("en onerror");
         };
+        //----------------------------------------------------------------------
 
+
+        //----------------------------------------------------------------------
         // create an object store on the transaction
-        var objectStore = transaction.objectStore("toDoList");
+        //var almacen = transaccion.objectStore("libros"); // esta linea es innecesaria
 
         // Make a request to get a record by key from the object store
-        var objectStoreRequest = objectStore.get("Walk dog");
+        var solicitudAlmacen = almacen.get(parseInt(dataId));
+        //----------------------------------------------------------------------
 
-        objectStoreRequest.onsuccess = function(event) {
+
+
+        solicitudAlmacen.onsuccess = function(event) {
         // report the success of our request
-        note.innerHTML += '<li>Request successful.</li>';
+        console.log(solicitudAlmacen);
+        
+        var elDato = solicitudAlmacen.result;
+        document.getElementById("elDato").innerHTML=`
+        <div>
+            
+            <h2>Título</h2>
+            <div>${elDato.titulo}</div>
+            <h2>Autor</h2>
+            <div>${elDato.autor}</div>
+        </div>
+        `;
 
-        var myRecord = objectStoreRequest.result;
+        console.log(elDato);
         };
 
+        solicitudAlmacen.onfaileure = function(event) {
+            // report the success of our request
+            console.log("Fallo");
+    
+            };
+
     };
-    contenido.classList.toggle("d-none");
+
+    editar.classList.toggle("d-none");
     
 
 }
+

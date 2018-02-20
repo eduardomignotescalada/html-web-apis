@@ -91,26 +91,54 @@ function mostrarDatoParticular(id){
 }
 
 function veAtras(){
-    volver.classList.toggle("d-none")
+    volver.classList.toggle("d-none");
+    //Sección contenidoCabecera on/off
+    //contenidoCabecera.classList.toggle("d-none");
+
+    //Sección contenido on/off
     contenido.classList.toggle("d-none");
+
+    
+    //Sección editar on/off
+    //editarCabecera.classList.toggle("d-none");
+
+    //Sección editar on/off
+    editar.classList.toggle("d-none");
+
     window.history.back();
     mostrarDatos(datosAMostrar);
 }
 
 function editarDato(id, dataId){
-    window.history.replaceState(null, null, `${id}.html`);
-    var contenido = document.getElementById("contenido");
+    window.history.pushState(null, null, `${id}.html`);
     volver.classList.toggle("d-none");
+    
+    //Sección contenidoCabecera on/off
+    //let contenidoCabecera = document.getElementById("contenidoCabecera");
+    //contenidoCabecera.classList.toggle("d-none");
+    
+    //Sección contenido on/off
+    var contenido = document.getElementById("contenido");
     contenido.classList.toggle("d-none");
+
+    //Sección editarCabecera on/off
+    //let editarCabecera = document.getElementById("editarCabecera");
+    //editarCabecera.classList.toggle("d-none");
+    
+    //Sección editar on/off
+    let editar = document.getElementById("editar");
+    //editar.classList.toggle("d-none");
+    
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("contenido").innerHTML = this.responseText;
+            document.getElementById("editar").innerHTML = this.responseText;
             $.getScript("js/editar.js")
                 .done(function(script, textStatus) {
                     console.log(textStatus);
-                    funcionMolona();
+                    console.log(dataId);
+                    selecionaElemento(dataId);
                 })
                 .fail(function(jqxhr, settings, exception) {
                     $("div.log").text("Triggered ajaxError handler.");
